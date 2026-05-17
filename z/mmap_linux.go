@@ -1,5 +1,5 @@
-//go:build !js
-// +build !js
+//go:build !tinygo && !js
+// +build !tinygo,!js
 
 /*
  * SPDX-FileCopyrightText: © 2017-2025 Istari Digital, Inc.

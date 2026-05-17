@@ -1,5 +1,5 @@
-//go:build linux && !arm64 && !arm && !js
-// +build linux,!arm64,!arm,!js
+//go:build linux && !arm64 && !arm && !js && !tinygo
+// +build linux,!arm64,!arm,!js,!tinygo
 
 /*
  * SPDX-FileCopyrightText: © 2017-2025 Istari Digital, Inc.

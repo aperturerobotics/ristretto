@@ -117,7 +117,7 @@ func TestTreeBasic(t *testing.T) {
 		t.Logf("final stats: %+v\n", stats)
 	}
 	setAndGet()
-	defer setPageSize(os.Getpagesize())
+	defer setPageSize(getPageSize())
 	setPageSize(16 << 5)
 	setAndGet()
 }
@@ -211,7 +211,7 @@ func TestTreeIterateKV(t *testing.T) {
 func TestOccupancyRatio(t *testing.T) {
 	// atmax 4 keys per node
 	setPageSize(16 * 5)
-	defer setPageSize(os.Getpagesize())
+	defer setPageSize(getPageSize())
 	require.Equal(t, 4, maxKeys)
 
 	bt := NewTree("TestOccupancyRatio")

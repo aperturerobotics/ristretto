@@ -8,7 +8,6 @@ package z
 import (
 	"fmt"
 	"math"
-	"os"
 	"reflect"
 	"strings"
 	"unsafe"
@@ -17,7 +16,7 @@ import (
 )
 
 var (
-	pageSize = os.Getpagesize()
+	pageSize = getPageSize()
 	maxKeys  = (pageSize / 16) - 1
 	//nolint:unused
 	oneThird = int(float64(maxKeys) / 3)

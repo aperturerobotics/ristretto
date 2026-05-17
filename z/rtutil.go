@@ -1,3 +1,6 @@
+//go:build !tinygo
+// +build !tinygo
+
 // MIT License
 
 // Copyright (c) 2019 Ewan Chou

@@ -1,5 +1,5 @@
-//go:build !linux
-// +build !linux
+//go:build !linux || tinygo
+// +build !linux tinygo
 
 /*
  * SPDX-FileCopyrightText: © 2017-2025 Istari Digital, Inc.
