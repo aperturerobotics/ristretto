@@ -8,7 +8,6 @@ package z
 import (
 	"fmt"
 	"math"
-	"reflect"
 	"strings"
 	"unsafe"
 
@@ -190,12 +189,7 @@ func BytesToUint64Slice(b []byte) []uint64 {
 	if len(b) == 0 {
 		return nil
 	}
-	var u64s []uint64
-	hdr := (*reflect.SliceHeader)(unsafe.Pointer(&u64s))
-	hdr.Len = len(b) / 8
-	hdr.Cap = hdr.Len
-	hdr.Data = uintptr(unsafe.Pointer(&b[0]))
-	return u64s
+	return unsafe.Slice((*uint64)(unsafe.Pointer(unsafe.SliceData(b))), len(b)/8)
 }
 
 func (t *Tree) newNode(bit uint64) node {

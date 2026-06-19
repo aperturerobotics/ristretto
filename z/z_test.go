@@ -47,16 +47,31 @@ func TestKeyToHash(t *testing.T) {
 }
 
 type CustomStringKey string
+type CustomUint64Key uint64
+type CustomBytesKey []byte
 type CustomIntKey int
+type CustomInt32Key int32
 
 func TestKeyToHashCustomTypes(t *testing.T) {
 	strKey, strConflict := KeyToHash(CustomStringKey("test"))
 	directStrKey, directStrConflict := KeyToHash("test")
 	verifyHashProduct(t, directStrKey, directStrConflict, strKey, strConflict)
 
+	uint64Key, uint64Conflict := KeyToHash(CustomUint64Key(42))
+	directUint64Key, directUint64Conflict := KeyToHash(uint64(42))
+	verifyHashProduct(t, directUint64Key, directUint64Conflict, uint64Key, uint64Conflict)
+
+	bytesKey, bytesConflict := KeyToHash(CustomBytesKey("test"))
+	directBytesKey, directBytesConflict := KeyToHash([]byte("test"))
+	verifyHashProduct(t, directBytesKey, directBytesConflict, bytesKey, bytesConflict)
+
 	intKey, intConflict := KeyToHash(CustomIntKey(42))
 	directIntKey, directIntConflict := KeyToHash(42)
 	verifyHashProduct(t, directIntKey, directIntConflict, intKey, intConflict)
+
+	int32Key, int32Conflict := KeyToHash(CustomInt32Key(-42))
+	directInt32Key, directInt32Conflict := KeyToHash(int32(-42))
+	verifyHashProduct(t, directInt32Key, directInt32Conflict, int32Key, int32Conflict)
 }
 
 func TestMulipleSignals(t *testing.T) {

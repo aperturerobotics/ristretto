@@ -7,73 +7,14 @@ package z
 
 import (
 	"context"
-	"reflect"
 	"sync"
-
-	"github.com/cespare/xxhash/v2"
 )
 
+// Key constrains the types ristretto can hash into a cache key. KeyToHash, the
+// hashing entry point, is build-tagged: native builds use reflect to resolve
+// named key types, and the js browser build uses a reflect-free type switch.
 type Key interface {
 	~uint64 | ~string | ~[]byte | ~byte | ~int | ~uint | ~int32 | ~uint32 | ~int64
-}
-
-// TODO: Figure out a way to re-use memhash for the second uint64 hash,
-// we already know that appending bytes isn't reliable for generating a
-// second hash (see Ristretto PR #88).
-// We also know that while the Go runtime has a runtime memhash128
-// function, it's not possible to use it to generate [2]uint64 or
-// anything resembling a 128bit hash, even though that's exactly what
-// we need in this situation.
-func KeyToHash[K Key](key K) (uint64, uint64) {
-	keyAsAny := any(key)
-	switch k := keyAsAny.(type) {
-	case uint64:
-		return k, 0
-	case string:
-		return MemHashString(k), xxhash.Sum64String(k)
-	case []byte:
-		return MemHash(k), xxhash.Sum64(k)
-	case byte:
-		return uint64(k), 0
-	case uint:
-		return uint64(k), 0
-	case int:
-		return uint64(k), 0
-	case int32:
-		return uint64(k), 0
-	case uint32:
-		return uint64(k), 0
-	case int64:
-		return uint64(k), 0
-	default:
-		// Handle custom types with underlying types (e.g., type MyKey string)
-		v := reflect.ValueOf(key)
-		switch v.Kind() {
-		case reflect.Uint64:
-			return v.Uint(), 0
-		case reflect.String:
-			s := v.String()
-			return MemHashString(s), xxhash.Sum64String(s)
-		case reflect.Slice:
-			if v.Type().Elem().Kind() == reflect.Uint8 {
-				b := v.Bytes()
-				return MemHash(b), xxhash.Sum64(b)
-			}
-		case reflect.Uint8:
-			return v.Uint(), 0
-		case reflect.Uint:
-			return v.Uint(), 0
-		case reflect.Int:
-			return uint64(v.Int()), 0
-		case reflect.Int32:
-			return uint64(v.Int()), 0
-		case reflect.Uint32:
-			return v.Uint(), 0
-		case reflect.Int64:
-			return uint64(v.Int()), 0
-		}
-		panic("Key type not supported")
-	}
 }
 
 var (
